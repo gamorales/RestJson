@@ -18,6 +18,8 @@ import java.time.*
 class RecyclerAdapter (var fixtures: MutableList<Fixture>, var context: Context) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
+    var fixtureList : List<Fixture> = listOf()
+
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = fixtures.get(position)
         holder.bind(item, context)
@@ -34,6 +36,11 @@ class RecyclerAdapter (var fixtures: MutableList<Fixture>, var context: Context)
         return fixtures.size
     }
 
+    fun setFixtureListItems(fixtureList: List<Fixture>){
+        this.fixtureList = fixtureList;
+        notifyDataSetChanged()
+    }
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val fixtureCompetition = view.findViewById(R.id.tvFixturesCompetition) as TextView
         val fixturePostponed = view.findViewById(R.id.tvFixturesPostponed) as RelativeLayout
@@ -45,18 +52,20 @@ class RecyclerAdapter (var fixtures: MutableList<Fixture>, var context: Context)
         val fixtureDayWeekScoreAway = view.findViewById(R.id.tvFixturesDayWeekScoreAway) as TextView
 
         fun bind(fixture: Fixture, context: Context){
-            fixtureCompetition.text = fixture.competitionStage
-            fixtureVenueName.text = fixture.venue + " | "
 
+            // Change date to user timezone
             val formatter = DateTimeFormatter.ISO_DATE_TIME
             val zonedDateTime = ZonedDateTime.parse(fixture.date, formatter)
             fixtureDate.text = DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM).format(zonedDateTime)
 
-            fixtureHomeTeam.text = fixture.homeTeam
-            fixtureAwayTeam.text = fixture.awayTeam
+            fixtureCompetition.text = fixture.competitionStage!!.competition!!.name
+            fixtureVenueName.text = fixture.venue!!.name + " | "
+            fixtureHomeTeam.text = fixture.homeTeam!!.name
+            fixtureAwayTeam.text = fixture.awayTeam!!.name
             fixtureDayMonthScoreHome.text = zonedDateTime.dayOfMonth.toString()
             fixtureDayWeekScoreAway.text = zonedDateTime.dayOfWeek.toString().substring(0..2)
 
+            // When state is postponed, then shows and change date color
             if (fixture.state.equals("postponed")) {
                 fixturePostponed.visibility = View.VISIBLE
                 fixtureDate.setTextColor(Color.parseColor("#FF0000"))

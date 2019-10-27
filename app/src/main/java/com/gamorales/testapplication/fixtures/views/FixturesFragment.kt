@@ -2,21 +2,29 @@ package com.gamorales.testapplication.fixtures.views
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gamorales.testapplication.R
+import com.gamorales.testapplication.core.api.RetrofitClient
+import com.gamorales.testapplication.core.api.Services
 import com.gamorales.testapplication.fixtures.controllers.RecyclerAdapter
-import com.gamorales.testapplication.fixtures.models.Fixture
+import com.gamorales.testapplication.fixtures.models.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
 class FixturesFragment : Fragment() {
 
     lateinit var mFixturesList : RecyclerView
     lateinit var mContext: Context
+    lateinit var mAdapter: RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +45,15 @@ class FixturesFragment : Fragment() {
         setupUI(view)
     }
 
+    /**
+     * Load the views from layout
+     */
     fun setupUI(view: View) {
         val dateYear = view.findViewById(R.id.tvFixturesMonth) as TextView
         dateYear.text = "Some date"
 
         // Fill RecyclerView with data
-        val mAdapter = RecyclerAdapter(getFixtures(), mContext)
+        mAdapter = RecyclerAdapter(getFixtures(), mContext)
         mFixturesList = view.findViewById(R.id.rvFixturesList) as RecyclerView
         mFixturesList.setHasFixedSize(true)
         mFixturesList.layoutManager = LinearLayoutManager(mContext)
@@ -53,55 +64,54 @@ class FixturesFragment : Fragment() {
      * Will load fixtures from endpoint/microservice
      */
     fun getFixtures(): MutableList<Fixture>{
+
         var fixtures:MutableList<Fixture> = ArrayList()
-        fixtures.add(
-            Fixture(
-                987847,
-                "FixtureUpcoming",
-                "Manchester City",
-                "Chelsea",
-                "2019-02-10T16:00:00.000Z",
-                "Premier League",
-                "Etihad Stadium",
-                "preMatch"
-            )
-        )
-        fixtures.add(
-            Fixture(
-                1036495,
-                "FixtureUpcoming",
-                "Malmö FF",
-                "Chelsea",
-                "2019-02-14T20:00:00.000Z",
-                "UEFA Europa League",
-                "Swedbank Stadion",
-                "preMatch"
-            )
-        )
-        fixtures.add(
-            Fixture(
-                987856,
-                "FixtureUpcoming",
-                "Chelsea",
-                "Brighton",
-                "2019-02-24T12:00:00.000Z",
-                "Premier League",
-                "Stamford Bridge",
-                "postponed"
-            )
-        )
-        fixtures.add(
-            Fixture(
-                1045272,
-                "FixtureUpcoming",
-                "Chelsea",
-                "Manchester City",
-                "2019-02-24T16:30:00.000Z",
-                "Carabao Cup",
-                "Wembley Stadium",
-                "preMatch"
-            )
-        )
+        val service = RetrofitClient.retrofitInstance?.create(Services::class.java)
+        val call: Call<List<Fixture>>? = service?.getFixtures()
+        call?.enqueue(object: Callback<List<Fixture>>{
+            override fun onFailure(call: Call<List<Fixture>>, t: Throwable) {
+                Toast.makeText(
+                    mContext,
+                    t.message,
+                    Toast.LENGTH_LONG
+                ).show()
+
+                Log.e("ERROR", t.message)
+            }
+
+            override fun onResponse(call: Call<List<Fixture>>, response: Response<List<Fixture>>) {
+
+                if(response?.body() != null) {
+                    mAdapter.setFixtureListItems(response.body()!!)
+                }
+
+                Log.i("INFO", response.body()?.size.toString())
+
+
+                /*for (item in fixtureList!!) {
+                    fixtures.add(
+                        Fixture(
+                            item.id,
+                            item.type,
+                            Team(item.homeTeam!!.id,item.homeTeam!!.name, "", "", ""),
+                            Team(item.awayTeam!!.id,item.awayTeam!!.name, "", "", ""),
+                            item.date,
+                            CompetitionStage(
+                                Competition(
+                                    item.competitionStage!!.competition!!.id,
+                                    item.competitionStage!!.competition!!.name
+                                ),
+                                "",
+                                ""
+                            ),
+                            Venue(item.venue!!.id,item.venue!!.name),
+                            item.state
+                        )
+                    )
+                }*/
+            }
+        })
+
         return fixtures
     }
 }
