@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="8dp"
+    app:cardCornerRadius="6dp"
+    app:cardElevation="6dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:weightSum="10"
+        android:background="@drawable/round_recyclerview"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="2"
+            android:weightSum="3">
+
+            <TextView
+                android:id="@+id/tvFixturesCompetition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CHAMPIONS LEAGUE"
+                android:textSize="@dimen/fixtures_dimen_names"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#FF0000"
+                android:layout_weight="2"
+                android:id="@+id/tvFixturesPostponed">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="POSTPONED"
+                    android:textSize="@dimen/fixtures_dimen_venues"
+                    android:textStyle="bold"
+                    android:textColor="#FFFFFF"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/tvFixturesVenueName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Stamford Bridge | "
+                android:textSize="@dimen/fixtures_dimen_venues" />
+
+            <TextView
+                android:id="@+id/tvFixturesDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sep 12, 2017 at 20:00"
+                android:textSize="@dimen/fixtures_dimen_venues"
+                android:textColor="#FF0000"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tvFixturesHomeTeam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Chelsea FC"
+                    android:textSize="@dimen/fixtures_dimen_names"
+                    android:textStyle="bold"
+                    android:padding="@dimen/fixtures_dimen_vertical"/>
+
+                <TextView
+                    android:id="@+id/tvFixturesAwayTeam"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Arsenal"
+                    android:textSize="@dimen/fixtures_dimen_names"
+                    android:textStyle="bold"
+                    android:padding="@dimen/fixtures_dimen_vertical"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:background="#A1A1A3" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="2"
+                android:padding="@dimen/fixtures_dimen_vertical">
+
+                <TextView
+                    android:id="@+id/tvFixturesDayMonthScoreHome"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="17"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"/>
+
+                <TextView
+                    android:id="@+id/tvFixturesDayWeekScoreAway"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="SUN"
+                    android:textSize="@dimen/fixtures_dimen_venues"
+                    android:textStyle="bold"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,10 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="rv_fixtures_padding">2dp</dimen>
+    <dimen name="fixtures_size_month">26sp</dimen>
+    <dimen name="fixtures_dimen_vertical">8dp</dimen>
+    <dimen name="fixtures_dimen_names">17sp</dimen>
+    <dimen name="fixtures_dimen_venues">13sp</dimen>
+</resources>

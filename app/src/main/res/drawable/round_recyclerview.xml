@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@color/rv_fixtures_background"/>
+
+    <stroke
+        android:width="3dp"
+        android:color="@color/rv_fixtures_background"/>
+
+    <padding
+        android:left="1dp"
+        android:top="1dp"
+        android:right="1dp"
+        android:bottom="1dp"/>
+
+    <corners
+        android:bottomRightRadius="11dp"
+        android:bottomLeftRadius="11dp"
+        android:topLeftRadius="11dp"
+        android:topRightRadius="11dp"/>
+</shape>
