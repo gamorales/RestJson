@@ -1,4 +1,4 @@
-package com.gamorales.testapplication.fixtures.controllers
+package com.gamorales.testapplication.core.controllers
 
 import android.content.Context
 import android.graphics.Color
@@ -9,7 +9,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gamorales.testapplication.R
-import com.gamorales.testapplication.fixtures.models.Fixture
+import com.gamorales.testapplication.core.models.Fixture
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.*
@@ -17,8 +17,6 @@ import java.time.*
 
 class RecyclerAdapter (var fixtures: List<Fixture>, var context: Context) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-
-    var fixtureList : List<Fixture> = listOf()
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = fixtures.get(position)
@@ -34,11 +32,6 @@ class RecyclerAdapter (var fixtures: List<Fixture>, var context: Context) :
 
     override fun getItemCount(): Int {
         return fixtures.size
-    }
-
-    fun setFixtureListItems(fixtureList: List<Fixture>){
-        this.fixtureList = fixtureList;
-        notifyDataSetChanged()
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -62,8 +55,6 @@ class RecyclerAdapter (var fixtures: List<Fixture>, var context: Context) :
             fixtureVenueName.text = fixture.venue!!.name + " | "
             fixtureHomeTeam.text = fixture.homeTeam!!.name
             fixtureAwayTeam.text = fixture.awayTeam!!.name
-            fixtureDayMonthScoreHome.text = zonedDateTime.dayOfMonth.toString()
-            fixtureDayWeekScoreAway.text = zonedDateTime.dayOfWeek.toString().substring(0..2)
 
             // When state is postponed, then shows and change date color
             if (fixture.state.equals("postponed")) {
@@ -74,6 +65,33 @@ class RecyclerAdapter (var fixtures: List<Fixture>, var context: Context) :
                 fixtureDate.setTextColor(Color.parseColor("#961A1818"))
             }
 
+            // If there is a score in the object, then change the views values
+            if (fixture.score!=null) {
+                var home = fixture.score!!.home
+                var away = fixture.score!!.away
+
+                // The winner highlight the score
+                if (home>away) {
+                    fixtureDayMonthScoreHome.setTextColor(Color.parseColor("#1F91F3"))
+                    fixtureDayWeekScoreAway.setTextColor(Color.parseColor("#A1A1A3"))
+                } else if (away>home) {
+                    fixtureDayMonthScoreHome.setTextColor(Color.parseColor("#A1A1A3"))
+                    fixtureDayWeekScoreAway.setTextColor(Color.parseColor("#1F91F3"))
+                } else {
+                    fixtureDayMonthScoreHome.setTextColor(Color.parseColor("#A1A1A3"))
+                    fixtureDayWeekScoreAway.setTextColor(Color.parseColor("#A1A1A3"))
+                }
+                fixtureDayMonthScoreHome.text = home.toString()
+                fixtureDayWeekScoreAway.text = away.toString()
+
+                fixtureDayWeekScoreAway.textSize = 24f
+
+
+            } else {
+                fixtureDayMonthScoreHome.text = zonedDateTime.dayOfMonth.toString()
+                fixtureDayWeekScoreAway.text = zonedDateTime.dayOfWeek.toString().substring(0..2)
+                fixtureDayWeekScoreAway.textSize = 13f
+            }
         }
     }
 }

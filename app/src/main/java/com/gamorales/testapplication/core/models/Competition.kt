@@ -1,4 +1,4 @@
-package com.gamorales.testapplication.fixtures.models
+package com.gamorales.testapplication.core.models
 
 class Competition (
     var id: Int?,

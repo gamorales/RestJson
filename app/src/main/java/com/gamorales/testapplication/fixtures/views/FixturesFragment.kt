@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.gamorales.testapplication.R
 import com.gamorales.testapplication.core.api.RetrofitClient
 import com.gamorales.testapplication.core.api.Services
-import com.gamorales.testapplication.fixtures.controllers.RecyclerAdapter
-import com.gamorales.testapplication.fixtures.models.*
+import com.gamorales.testapplication.core.models.Fixture
+import com.gamorales.testapplication.core.controllers.RecyclerAdapter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -23,7 +23,6 @@ class FixturesFragment : Fragment() {
 
     lateinit var mFixturesList : RecyclerView
     lateinit var mContext: Context
-    lateinit var mAdapter: RecyclerAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +35,7 @@ class FixturesFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fixtures_fragment, container, false)
+        return inflater.inflate(R.layout.data_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -48,18 +47,18 @@ class FixturesFragment : Fragment() {
      * Load the views from layout and fill the RecyclerView
      */
     fun setupUI(view: View) {
-        val dateYear = view.findViewById(R.id.tvFixturesMonth) as TextView
+        val dateYear = view.findViewById(R.id.tvMonth) as TextView
         dateYear.text = "Some date"
 
         // Fill RecyclerView with data
-        mAdapter = RecyclerAdapter(getFixtures(), mContext)
-        mFixturesList = view.findViewById(R.id.rvFixturesList) as RecyclerView
+        getFixtures()
+        mFixturesList = view.findViewById(R.id.rvList) as RecyclerView
     }
 
     /**
      * Will load fixtures from endpoint/microservice
      */
-    fun getFixtures(): List<Fixture>{
+    fun getFixtures(){
 
         var fixtures: List<Fixture> = ArrayList()
         val service = RetrofitClient.retrofitInstance?.create(Services::class.java)
@@ -76,7 +75,5 @@ class FixturesFragment : Fragment() {
                 }
             }
         })
-
-        return fixtures
     }
 }

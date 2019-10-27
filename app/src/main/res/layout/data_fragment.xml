@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/tvFixturesMonth"
+            android:id="@+id/tvMonth"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="September 2017"
@@ -19,7 +19,7 @@
             android:textSize="@dimen/fixtures_size_month" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFixturesList"
+            android:id="@+id/rvList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:elevation="12dp"
