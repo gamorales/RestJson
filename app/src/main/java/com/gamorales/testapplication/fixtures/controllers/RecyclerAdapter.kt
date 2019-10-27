@@ -15,7 +15,7 @@ import java.time.format.FormatStyle
 import java.time.*
 
 
-class RecyclerAdapter (var fixtures: MutableList<Fixture>, var context: Context) :
+class RecyclerAdapter (var fixtures: List<Fixture>, var context: Context) :
     RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     var fixtureList : List<Fixture> = listOf()

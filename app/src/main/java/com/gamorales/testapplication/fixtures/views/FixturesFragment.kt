@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,7 +45,7 @@ class FixturesFragment : Fragment() {
     }
 
     /**
-     * Load the views from layout
+     * Load the views from layout and fill the RecyclerView
      */
     fun setupUI(view: View) {
         val dateYear = view.findViewById(R.id.tvFixturesMonth) as TextView
@@ -55,60 +54,26 @@ class FixturesFragment : Fragment() {
         // Fill RecyclerView with data
         mAdapter = RecyclerAdapter(getFixtures(), mContext)
         mFixturesList = view.findViewById(R.id.rvFixturesList) as RecyclerView
-        mFixturesList.setHasFixedSize(true)
-        mFixturesList.layoutManager = LinearLayoutManager(mContext)
-        mFixturesList.adapter = mAdapter
     }
 
     /**
      * Will load fixtures from endpoint/microservice
      */
-    fun getFixtures(): MutableList<Fixture>{
+    fun getFixtures(): List<Fixture>{
 
-        var fixtures:MutableList<Fixture> = ArrayList()
+        var fixtures: List<Fixture> = ArrayList()
         val service = RetrofitClient.retrofitInstance?.create(Services::class.java)
         val call: Call<List<Fixture>>? = service?.getFixtures()
         call?.enqueue(object: Callback<List<Fixture>>{
             override fun onFailure(call: Call<List<Fixture>>, t: Throwable) {
-                Toast.makeText(
-                    mContext,
-                    t.message,
-                    Toast.LENGTH_LONG
-                ).show()
-
                 Log.e("ERROR", t.message)
             }
 
             override fun onResponse(call: Call<List<Fixture>>, response: Response<List<Fixture>>) {
-
-                if(response?.body() != null) {
-                    mAdapter.setFixtureListItems(response.body()!!)
+                mFixturesList.apply {
+                    layoutManager = LinearLayoutManager(mContext)
+                    adapter = RecyclerAdapter(response?.body()!!, mContext)
                 }
-
-                Log.i("INFO", response.body()?.size.toString())
-
-
-                /*for (item in fixtureList!!) {
-                    fixtures.add(
-                        Fixture(
-                            item.id,
-                            item.type,
-                            Team(item.homeTeam!!.id,item.homeTeam!!.name, "", "", ""),
-                            Team(item.awayTeam!!.id,item.awayTeam!!.name, "", "", ""),
-                            item.date,
-                            CompetitionStage(
-                                Competition(
-                                    item.competitionStage!!.competition!!.id,
-                                    item.competitionStage!!.competition!!.name
-                                ),
-                                "",
-                                ""
-                            ),
-                            Venue(item.venue!!.id,item.venue!!.name),
-                            item.state
-                        )
-                    )
-                }*/
             }
         })
 
