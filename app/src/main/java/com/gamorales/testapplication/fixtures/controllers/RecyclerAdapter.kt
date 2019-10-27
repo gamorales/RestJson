@@ -1,4 +1,4 @@
-package com.gamorales.testapplication.results.controllers
+package com.gamorales.testapplication.fixtures.controllers
 
 import android.content.Context
 import android.graphics.Color
@@ -9,7 +9,7 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.gamorales.testapplication.R
-import com.gamorales.testapplication.results.models.Fixture
+import com.gamorales.testapplication.fixtures.models.Fixture
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import java.time.*
@@ -25,7 +25,9 @@ class RecyclerAdapter (var fixtures: MutableList<Fixture>, var context: Context)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
-        return ViewHolder(layoutInflater.inflate(R.layout.fragments_list, parent, false))
+        return ViewHolder(
+            layoutInflater.inflate(R.layout.fragments_list, parent, false)
+        )
     }
 
     override fun getItemCount(): Int {

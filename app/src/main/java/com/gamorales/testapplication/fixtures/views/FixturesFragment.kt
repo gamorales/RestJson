@@ -10,8 +10,8 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gamorales.testapplication.R
-import com.gamorales.testapplication.results.controllers.RecyclerAdapter
-import com.gamorales.testapplication.results.models.Fixture
+import com.gamorales.testapplication.fixtures.controllers.RecyclerAdapter
+import com.gamorales.testapplication.fixtures.models.Fixture
 
 class FixturesFragment : Fragment() {
 
@@ -41,6 +41,7 @@ class FixturesFragment : Fragment() {
         val dateYear = view.findViewById(R.id.tvFixturesMonth) as TextView
         dateYear.text = "Some date"
 
+        // Fill RecyclerView with data
         val mAdapter = RecyclerAdapter(getFixtures(), mContext)
         mFixturesList = view.findViewById(R.id.rvFixturesList) as RecyclerView
         mFixturesList.setHasFixedSize(true)

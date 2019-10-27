@@ -1,4 +1,4 @@
-package com.gamorales.testapplication.results.models
+package com.gamorales.testapplication.fixtures.models
 
 import com.google.gson.annotations.SerializedName
 
