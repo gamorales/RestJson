@@ -6,6 +6,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,9 +18,12 @@ import com.gamorales.testapplication.core.api.RetrofitClient
 import com.gamorales.testapplication.core.api.Services
 import com.gamorales.testapplication.core.models.Fixture
 import com.gamorales.testapplication.core.controllers.RecyclerAdapter
+import kotlinx.android.synthetic.main.data_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
 
 class FixturesFragment : Fragment() {
 
@@ -48,7 +54,24 @@ class FixturesFragment : Fragment() {
      */
     fun setupUI(view: View) {
         val dateYear = view.findViewById(R.id.tvMonth) as TextView
-        dateYear.text = "Some date"
+        val months = view.findViewById(R.id.spMonths) as Spinner
+        // Create an ArrayAdapter using a simple spinner layout and languages array
+
+        spMonths?.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                dateYear.text = parent?.getItemAtPosition(position).toString()
+            }
+
+        }
 
         // Fill RecyclerView with data
         getFixtures()
@@ -60,7 +83,6 @@ class FixturesFragment : Fragment() {
      */
     fun getFixtures(){
 
-        var fixtures: List<Fixture> = ArrayList()
         val service = RetrofitClient.retrofitInstance?.create(Services::class.java)
         val call: Call<List<Fixture>>? = service?.getFixtures()
         call?.enqueue(object: Callback<List<Fixture>>{
@@ -69,6 +91,20 @@ class FixturesFragment : Fragment() {
             }
 
             override fun onResponse(call: Call<List<Fixture>>, response: Response<List<Fixture>>) {
+                val formatter = DateTimeFormatter.ISO_DATE_TIME
+                val months = mutableListOf<String>()
+                for (fixture in response?.body()!!) {
+                    val zonedDateTime = ZonedDateTime.parse(fixture.date.toString(), formatter)
+                    months.add(zonedDateTime.month.toString() + " " + zonedDateTime.year)
+                }
+                val strMonths = months.distinct()
+                val aa = ArrayAdapter(mContext, android.R.layout.simple_spinner_item, strMonths)
+                // Set layout to use when the list of choices appear
+                aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+                // Set Adapter to Spinner
+                spMonths!!.setAdapter(aa)
+
+                Log.i("INFO", "ALGO")
                 mFixturesList.apply {
                     layoutManager = LinearLayoutManager(mContext)
                     adapter = RecyclerAdapter(response?.body()!!, mContext)

@@ -47,8 +47,8 @@ class ResultsFragment : Fragment() {
      * Load the views from layout and fill the RecyclerView
      */
     fun setupUI(view: View) {
-        val dateYear = view.findViewById(R.id.tvMonth) as TextView
-        dateYear.text = "Some date"
+        //val dateYear = view.findViewById(R.id.tvMonth) as TextView
+        //dateYear.text = "Some date"
 
         // Fill RecyclerView with data
         getResults()
