@@ -6,18 +6,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.Spinner
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gamorales.testapplication.R
 import com.gamorales.testapplication.core.api.RetrofitClient
 import com.gamorales.testapplication.core.api.Services
-import com.gamorales.testapplication.core.models.Fixture
 import com.gamorales.testapplication.core.controllers.RecyclerAdapter
+import com.gamorales.testapplication.core.models.*
 import kotlinx.android.synthetic.main.data_fragment.*
 import retrofit2.Call
 import retrofit2.Callback
@@ -29,6 +26,7 @@ class FixturesFragment : Fragment() {
 
     lateinit var mFixturesList : RecyclerView
     lateinit var mContext: Context
+    lateinit var progressBar: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,6 +51,7 @@ class FixturesFragment : Fragment() {
      * Load the views from layout and fill the RecyclerView
      */
     fun setupUI(view: View) {
+        progressBar = view.findViewById(R.id.progressBar) as ProgressBar
         val dateYear = view.findViewById(R.id.tvMonth) as TextView
         val months = view.findViewById(R.id.spMonths) as Spinner
         // Create an ArrayAdapter using a simple spinner layout and languages array
@@ -83,6 +82,8 @@ class FixturesFragment : Fragment() {
      */
     fun getFixtures(){
 
+        var fixtureHM : HashMap<String, List<Fixture>> = HashMap()
+        var fixtures: MutableList<Fixture> = ArrayList()
         val service = RetrofitClient.retrofitInstance?.create(Services::class.java)
         val call: Call<List<Fixture>>? = service?.getFixtures()
         call?.enqueue(object: Callback<List<Fixture>>{
@@ -95,8 +96,56 @@ class FixturesFragment : Fragment() {
                 val months = mutableListOf<String>()
                 for (fixture in response?.body()!!) {
                     val zonedDateTime = ZonedDateTime.parse(fixture.date.toString(), formatter)
-                    months.add(zonedDateTime.month.toString() + " " + zonedDateTime.year)
+                    val monthYear: String = zonedDateTime.month.toString() + " " + zonedDateTime.year
+                    months.add(monthYear)
+
+                    fixtures.add(
+                        Fixture(
+                            fixture.id,
+                            fixture.type,
+                            Team(
+                                fixture.homeTeam?.id,
+                                fixture.homeTeam?.name,
+                                fixture.homeTeam?.shortName,
+                                fixture.homeTeam?.abbr,
+                                fixture.homeTeam?.alias
+                            ),
+                            Team(
+                                fixture.awayTeam?.id,
+                                fixture.awayTeam?.name,
+                                fixture.awayTeam?.shortName,
+                                fixture.awayTeam?.abbr,
+                                fixture.awayTeam?.alias
+                            ),
+                            fixture.date,
+                            CompetitionStage(
+                                Competition(
+                                    fixture.competitionStage?.competition?.id,
+                                    fixture.competitionStage?.competition?.name
+                                ),
+                                fixture.competitionStage?.stage,
+                                fixture.competitionStage?.leg
+                            ),
+                            Venue(
+                                fixture.venue?.id,
+                                fixture.venue?.name
+                            ),
+                            fixture.state,
+                            null,
+                            null,
+                            null
+                        )
+                    )
+
+                    fixtureHM.put(monthYear, fixtures)
+                    Log.i("INFO", "ALGO")
                 }
+
+                //Kotlin language to get the same results
+                for(key in fixtureHM.keys){
+                    Log.i("some", "Element at key $key : ${fixtureHM[key]}")
+                }
+
                 val strMonths = months.distinct()
                 val aa = ArrayAdapter(mContext, android.R.layout.simple_spinner_item, strMonths)
                 // Set layout to use when the list of choices appear
@@ -109,6 +158,7 @@ class FixturesFragment : Fragment() {
                     layoutManager = LinearLayoutManager(mContext)
                     adapter = RecyclerAdapter(response?.body()!!, mContext)
                 }
+                progressBar.visibility = View.INVISIBLE
             }
         })
     }
